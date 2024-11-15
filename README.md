@@ -1,5 +1,4 @@
-# Readme
-Kelompok 8 TI UNS 2024
+# Kelompok 8 TI UNS 2024
 Aplikasi Pencatat Kesehatan Harian
 ### Anggota:
 - Syifa Alea Nisrina (I0324124)

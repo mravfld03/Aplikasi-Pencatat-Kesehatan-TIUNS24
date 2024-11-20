@@ -31,53 +31,53 @@ Target konsumsi air (misal: 2000 ml).
 
 Aplikasi akan memberikan notifikasi atau peringatan jika target harian belum tercapai.
 
-3. Ringkasan dan Grafik Mingguan/Bulanan
-Menampilkan ringkasan data kesehatan dalam bentuk grafik untuk:
+3. Ringkasan dan ringkasan Mingguan/Bulanan
+Menampilkan ringkasan data kesehatan dalam bentuk ringkasan untuk:
 Langkah harian selama satu minggu/bulan.
 Durasi tidur mingguan/bulanan.
 Konsumsi air rata-rata.
 
-Grafik ini memberikan pengguna gambaran visual tentang konsistensi aktivitas kesehatannya.
+Ringkasan ini memberikan pengguna gambaran visual tentang konsistensi aktivitas kesehatannya.
 
 4. Peringatan & Pengingat Otomatis
 Memberikan peringatan jika pengguna belum mencapai target harian.
-Mengirimkan pengingat harian untuk mencatat data kesehatan setiap hari.
+Mengirimkan pengingat harian untuk mencatat data kesehatan periode.
 
 ---
 Struktur Program dan Penggunaan Kriteria
 
 1. Input & Output
-Input: Jumlah langkah, durasi tidur, asupan kalori, jumlah air.
-Output: Ringkasan harian, grafik mingguan/bulanan, status apakah target harian tercapai atau belum.
+Input: Jumlah langkah, durasi tidur, jumlah air.
+Output: Ringkasan harian, ringkasan mingguan/bulanan, status apakah target harian tercapai atau belum.
 
 2. Tipe Data & Operator
-Tipe Data: Integer/float untuk angka (langkah, kalori, jam tidur, air), string untuk nama data kesehatan.
+Tipe Data: Integer/float untuk angka (langkah, jam tidur, air), string untuk nama data kesehatan.
 Operator: Operator aritmatika untuk menghitung rata-rata, perbandingan untuk mengecek apakah target tercapai.
 
 3. Loop (Perulangan)
 Mengulangi proses input harian dan menampilkan ringkasan mingguan atau bulanan.
-Menampilkan ringkasan data kesehatan dalam bentuk grafik berdasarkan catatan mingguan/bulanan.
+Menampilkan ringkasan data kesehatan dalam bentuk ringkasan berdasarkan catatan mingguan/bulanan.
 
 4. Percabangan
-Mengecek apakah setiap input harian mencapai target atau tidak.
+Mengecek apakah setiap input mingguan/bulanan mencapai target atau tidak.
 Memberikan peringatan jika target harian belum tercapai.
 
 5. Konsep Array
 Menyimpan data kesehatan harian dalam bentuk array untuk langkah, durasi tidur, dan konsumsi air.
-Data array akan digunakan untuk menghitung rata-rata mingguan/bulanan dan menampilkan grafik.
+Data array akan digunakan untuk menghitung rata-rata mingguan/bulanan dan menampilkan ringkasan.
 
 ---
 Alur Penggunaan Aplikasi
 
 1. Pengaturan Awal
-Pengguna pertama kali memasukkan target harian untuk langkah, durasi tidur, kalori, dan jumlah air yang ingin dicapai.
+Pengguna pertama kali memasukkan target harian untuk langkah, durasi tidur, dan jumlah air yang ingin dicapai.
 2. Pencatatan Data Harian
 Setiap hari, pengguna memasukkan data kesehatan harian. Aplikasi menyimpan data ini dan langsung mengecek apakah target harian terpenuhi.
 3. Peringatan Harian
-Jika target tidak tercapai dalam waktu tertentu (misalnya sebelum pukul 20.00), aplikasi akan memberikan peringatan untuk mengingatkan pengguna.
-4. Ringkasan dan Grafik
-Pada akhir minggu atau bulan, pengguna dapat melihat ringkasan progres kesehatannya. Aplikasi menampilkan grafik yang menunjukkan tren kesehatan pengguna, misalnya apakah jumlah langkah cenderung meningkat atau menurun.
-5. Penyesuaian Target
+Jika target tidak tercapai dalam setiap waktu, aplikasi akan memberikan peringatan untuk mengingatkan pengguna.
+5. Ringkasan
+Pada akhir minggu atau bulan, pengguna dapat melihat ringkasan progres kesehatannya. Aplikasi menampilkan ringkasan yang menunjukkan tren kesehatan pengguna, misalnya apakah jumlah langkah cenderung meningkat atau menurun.
+6. Penyesuaian Target
 Pengguna dapat menyesuaikan targetnya kapan saja berdasarkan progres dan kebutuhan yang dirasa cocok.
 ---
 Teknologi dan Antarmuka

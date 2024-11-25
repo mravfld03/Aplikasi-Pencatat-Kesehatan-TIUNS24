@@ -79,6 +79,7 @@ class HealthTrackerApp:
         messagebox.showinfo("Progres Kesehatan", progress_text)
 
 
+ #tambahan
 # Jalankan aplikasi
 if __name__ == "__main__":
     root = tk.Tk()

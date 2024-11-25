@@ -59,11 +59,15 @@ def main():
 
         tk.Label(registerWindow, text="Username:").grid(row=0, column=0, padx=5, pady=5)
         tk.Label(registerWindow, text="Password:").grid(row=1, column=0, padx=5, pady=5)
+        tk.Label(registerWindow, text="Target yang diinginkan").grid(row=2, column=0, padx=5, pady=5)
+
 
         username = tk.Entry(registerWindow)
         password = tk.Entry(registerWindow, show="*")
+        Target_yang_diinginkan = tk.Entry(registerWindow)
         username.grid(row=0, column=1, padx=5, pady=5)
         password.grid(row=1, column=1, padx=5, pady=5)
+        Target_yang_diinginkan.grid(row=2, column=1, padx=5, pady=5)
 
         def register_action():
             uname = username.get()
@@ -78,8 +82,8 @@ def main():
             else:
                 msgbox.showerror("Gagal Daftar", "Username dan password tidak boleh kosong.")
 
-        tk.Button(registerWindow, text="Daftar", command=register_action).grid(row=2, column=0, padx=5, pady=10)
-        tk.Button(registerWindow, text="Batal", command=lambda: [registerWindow.destroy(), login_window()]).grid(row=2, column=1, padx=5, pady=10)
+        tk.Button(registerWindow, text="Daftar", command=register_action).grid(row=3, column=0, padx=5, pady=10)
+        tk.Button(registerWindow, text="Batal", command=lambda: [registerWindow.destroy(), login_window()]).grid(row=3, column=1, padx=5, pady=10)
 
         registerWindow.mainloop()
 

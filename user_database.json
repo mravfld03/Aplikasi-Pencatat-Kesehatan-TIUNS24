@@ -1,1 +1,17 @@
-
+{
+    "asd": {
+        "password": "asd",
+        "target": "Mingguan"
+    },
+    "rafli": {
+        "password": "rafli",
+        "target": "Mingguan"
+    },
+    "muh rafli": {
+        "password": "mrafli",
+        "target": "Mingguan",
+        "langkah": "10000",
+        "jamTidur": "8",
+        "jumlahLiter": "2"
+    }
+}

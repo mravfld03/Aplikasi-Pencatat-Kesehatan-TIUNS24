@@ -1,7 +1,7 @@
 import tkinter as tk
 import tkinter.messagebox as msgbox
 
-\# Tampilkan hasil progres
+# Tampilkan hasil progres
         progress_text = (
             f"--- Hasil Progres Kesehatan ---\n\n"
             f"Rata-rata langkah: {avg_steps:.2f}\n"

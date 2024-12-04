@@ -11,7 +11,7 @@ Deskripsi Umum:
 Aplikasi ini bertujuan membantu pengguna melacak dan memantau aktivitas kesehatan harian, seperti jumlah langkah, durasi tidur, dan jumlah air yang dikonsumsi. Dengan aplikasi ini, pengguna bisa mencatat setiap aktivitas kesehatan setiap hari, melihat progres mingguan atau bulanan, dan mendapatkan peringatan jika target kesehatan harian tidak terpenuhi.
 
 Flowchart:
-![Flowchart](https://ibb.co.com/f8THnCH)
+![Flowchart](images/flowchart.jpg)
 
 Tujuan Aplikasi:
 1. Memberikan kemudahan bagi pengguna untuk mencatat aktivitas kesehatannya.

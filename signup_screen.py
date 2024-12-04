@@ -36,7 +36,7 @@ def login_window():
     loginWindow.title("Login")
 
     # Pasang gambar background
-    bg_image = Image.open(r'D:\Kelompok_8_Aplikasi_Pencatat_Kesehatan_TIUNS24\background.jpg')  # Pastikan file ini ada di direktori yang sama
+    bg_image = Image.open(r'images/background.jpg')  # Pastikan file ini ada di direktori yang sama
     bg_image = bg_image.resize((loginWindow.winfo_screenwidth(), loginWindow.winfo_screenheight()))
     bg_photo = ImageTk.PhotoImage(bg_image)
     bg_label = tk.Label(loginWindow, image=bg_photo)
@@ -80,7 +80,7 @@ def register_window():
     registerWindow.title("Daftar")
 
     # Pasang gambar background
-    bg_image = Image.open(r'D:\Kelompok_8_Aplikasi_Pencatat_Kesehatan_TIUNS24\background.jpg')
+    bg_image = Image.open(r'images\background.jpg')
     bg_image = bg_image.resize((registerWindow.winfo_screenwidth(), registerWindow.winfo_screenheight()))
     bg_photo = ImageTk.PhotoImage(bg_image)
     bg_label = tk.Label(registerWindow, image=bg_photo)

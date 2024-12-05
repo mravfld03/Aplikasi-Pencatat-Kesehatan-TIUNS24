@@ -94,18 +94,18 @@ def register_window():
     tk.Label(frame, text="Target yang diinginkan:", bg="white").grid(row=2, column=0, padx=5, pady=5)
     tk.Label(frame, text="Jumlah langkah/hari:", bg="white").grid(row=3, column=0, padx=5, pady=5)
     tk.Label(frame, text="Jam tidur/hari:", bg="white").grid(row=4, column=0, padx=5, pady=5)
-    tk.Label(frame, text="Jumlah liter air minum/hari:", bg="white").grid(row=5, column=0, padx=5, pady=5)
+    tk.Label(frame, text="Jumlah gelas air minum(250ml)/hari:", bg="white").grid(row=5, column=0, padx=5, pady=5)
 
     username = tk.Entry(frame)
     password = tk.Entry(frame, show="*")
     langkah = tk.Entry(frame)
     jamTidur = tk.Entry(frame)
-    jumlahLiter = tk.Entry(frame)
+    gelasair = tk.Entry(frame)
     username.grid(row=0, column=1, padx=5, pady=5)
     password.grid(row=1, column=1, padx=5, pady=5)
     langkah.grid(row=3, column=1, padx=5, pady=5)
     jamTidur.grid(row=4, column=1, padx=5, pady=5)
-    jumlahLiter.grid(row=5, column=1, padx=5, pady=5)
+    gelasair.grid(row=5, column=1, padx=5, pady=5)
 
     # Daftar pilihan untuk target yang diinginkan
     options = ["Mingguan", "Bulanan"]
@@ -121,12 +121,12 @@ def register_window():
         target = target_variable.get()
         lgkh = langkah.get()
         jmTdr = jamTidur.get()
-        jmlLiter = jumlahLiter.get()
+        glsair = gelasair.get()
 
         if uname in user_data:
             msgbox.showerror("Gagal Daftar", "Username sudah terdaftar.")
         elif uname and pwd:
-            user_data[uname] = {"password": pwd, "target": target, "langkah": lgkh, "jamTidur": jmTdr, "jumlahLiter": jmlLiter}
+            user_data[uname] = {"password": pwd, "target": target, "langkah": lgkh, "jamTidur": jmTdr, "gelasair": glsair}
             save_database(user_data)
             msgbox.showinfo("Berhasil Daftar", "Akun berhasil dibuat!")
             registerWindow.destroy()
@@ -158,10 +158,11 @@ def open_main_window(username):
     tk.Label(frame, text=f"Target Anda: {user_data[username]['target']}", font=("Arial", 12), bg="lightblue").pack(pady=5)
     
     def switch_input_harian():
-        input_harian_window()
+        input_harian_window(mainWindow)
     
     def switch_to_lihat_progress():
-        lihat_progress_window()
+        mainWindow.destroy()
+        lihat_progress_window(username)
         
     tk.Button(frame, text="Input Data Harian", command=switch_input_harian).pack(pady=20)
     tk.Button(frame, text="Lihat Progress", command=switch_to_lihat_progress).pack(pady=20)
@@ -170,36 +171,68 @@ def open_main_window(username):
     center_window(mainWindow, 1280, 720)
     mainWindow.mainloop()
 
-def input_harian_window():
-    inputWindow = tk.Tk()
+def input_harian_window(parent):
+    inputWindow = tk.Toplevel(parent)
     inputWindow.title("Input Data Harian")
     
+    # Dapatkan ukuran layar
+    screen_width = parent.winfo_screenwidth()
+    screen_height = parent.winfo_screenheight()
+    
+    # Muat gambar latar belakang
     bg_image = Image.open(r'images/background.jpg')
-    bg_image = bg_image.resize((inputWindow.winfo_screenwidth(), inputWindow.winfo_screenheight()))
+    bg_image = bg_image.resize((screen_width, screen_height))
     bg_photo = ImageTk.PhotoImage(bg_image)
+    
+    # Label untuk latar belakang
     bg_label = tk.Label(inputWindow, image=bg_photo)
+    bg_label.image = bg_photo  # Simpan referensi
     bg_label.place(relwidth=1, relheight=1)
-
     frame = tk.Frame(inputWindow, bg="white", padx=20, pady=20)
     frame.place(relx=0.5, rely=0.5, anchor="center")
     
-    tk.Label(frame, text=f"Selamat Datang, {username}!", font=("Arial", 16), bg="lightblue").pack(pady=10)
-    tk.Label(frame, text=f"Target Anda: {user_data[username]['target']}", font=("Arial", 12), bg="lightblue").pack(pady=5)
+    tk.Label(frame, text="Selamat Datang!", font=("Arial", 16), bg="lightblue").pack(pady=10)
+    tk.Label(frame, text="Input Data Anda", font=("Arial", 12), bg="lightblue").pack(pady=5)
+    tk.Button(frame, text="Langkah", command=inputWindow.destroy).pack(pady=15)
+    tk.Button(frame, text="Jam Tidur", command=inputWindow.destroy).pack(pady=15)
+    tk.Button(frame, text="Gelas Air", command=inputWindow.destroy).pack(pady=15)
     
-    center_window(inputWindow, 1280, 720)
-    inputWindow.mainloop()
-
-def lihat_progress_window():
+    center_window(inputWindow, 640, 320)
+    
+def lihat_progress_window(username):
     progressWindow = tk.Tk()
     progressWindow.title("Lihat Progress")
     
-    bg_image = Image.open(r'images/background.jpg')
-    bg_image = bg_image.resize((progressWindow.winfo_screenwidth(), progressWindow.winfo_screenheight()))
-    bg_photo = ImageTk.PhotoImage(bg_image)
-    bg_label = tk.Label(progressWindow, image=bg_photo)
-    bg_label.place(relwidth=1, relheight=1)
+    screen_width = progressWindow.winfo_screenwidth()
+    screen_height = progressWindow.winfo_screenheight()
     
-
+    # Muat gambar latar belakang
+    bg_image = Image.open(r'images/background.jpg')
+    bg_image = bg_image.resize((screen_width, screen_height))
+    bg_photo = ImageTk.PhotoImage(bg_image)
+    
+    # Label untuk latar belakang
+    bg_label = tk.Label(progressWindow, image=bg_photo)
+    bg_label.image = bg_photo  # Simpan referensi
+    bg_label.place(relwidth=1, relheight=1)
+    frame = tk.Frame(progressWindow, bg="white", padx=20, pady=20)
+    frame.place(relx=0.5, rely=0.5, anchor="center")
+    
+    tk.Label(frame, text="Selamat Datang!", font=("Arial", 16), bg="lightblue").pack(pady=10)
+    tk.Label(frame, text="Pilih Progress", font=("Arial", 12), bg="lightblue").pack(pady=5)
+    tk.Button(frame, text="Harian", command=progressWindow.destroy).pack(pady=15)
+    tk.Button(frame, text=f"{user_data[username]['target']}", command=progressWindow.destroy).pack(pady=15)
+    tk.Button(frame, text="Grafik", command=progressWindow.destroy).pack(pady=15)
+    
+    def kembali_ke_main_window():
+        progressWindow.destroy()  # Tutup jendela progress
+        open_main_window(username)  # Buka jendela main
+    
+    tk.Button(frame, text="Kembali", command=kembali_ke_main_window).pack(pady=15)
+    
+    center_window(progressWindow, 1280, 720)
+    progressWindow.mainloop()
+    
 # Fungsi utama untuk memulai program
 def main():
     login_window()

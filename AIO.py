@@ -3,6 +3,8 @@ import tkinter.messagebox as msgbox
 from PIL import Image, ImageTk
 import json
 import os
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 # Nama file database
 database_file = "user_database.json"
@@ -193,11 +195,27 @@ def input_harian_window(parent):
     
     tk.Label(frame, text="Selamat Datang!", font=("Arial", 16), bg="lightblue").pack(pady=10)
     tk.Label(frame, text="Input Data Anda", font=("Arial", 12), bg="lightblue").pack(pady=5)
-    tk.Button(frame, text="Langkah", command=inputWindow.destroy).pack(pady=15)
-    tk.Button(frame, text="Jam Tidur", command=inputWindow.destroy).pack(pady=15)
-    tk.Button(frame, text="Gelas Air", command=inputWindow.destroy).pack(pady=15)
+    
+    def switch_to_input_langkah():
+        
+        
+    def switch_to_input_jamtidur():
+        
+    
+    def switch_to_input_gelasair():
+        
+    
+    tk.Button(frame, text="Langkah", command=input_langkah_window).pack(pady=15)
+    tk.Button(frame, text="Jam Tidur", command=input_jamtidur_window).pack(pady=15)
+    tk.Button(frame, text="Gelas Air", command=input_gelasair_window).pack(pady=15)
     
     center_window(inputWindow, 640, 320)
+
+def input_langkah_window():
+
+def input_jamtidur_window():
+
+def input_gelasair_window():
     
 def lihat_progress_window(username):
     progressWindow = tk.Tk()
@@ -215,6 +233,9 @@ def lihat_progress_window(username):
     bg_label = tk.Label(progressWindow, image=bg_photo)
     bg_label.image = bg_photo  # Simpan referensi
     bg_label.place(relwidth=1, relheight=1)
+    
+    
+    
     frame = tk.Frame(progressWindow, bg="white", padx=20, pady=20)
     frame.place(relx=0.5, rely=0.5, anchor="center")
     
@@ -222,7 +243,11 @@ def lihat_progress_window(username):
     tk.Label(frame, text="Pilih Progress", font=("Arial", 12), bg="lightblue").pack(pady=5)
     tk.Button(frame, text="Harian", command=progressWindow.destroy).pack(pady=15)
     tk.Button(frame, text=f"{user_data[username]['target']}", command=progressWindow.destroy).pack(pady=15)
-    tk.Button(frame, text="Grafik", command=progressWindow.destroy).pack(pady=15)
+    
+    def grafik_window():
+        show_graph_window()
+    
+    tk.Button(frame, text="Grafik", command=grafik_window).pack(pady=15)
     
     def kembali_ke_main_window():
         progressWindow.destroy()  # Tutup jendela progress
@@ -233,6 +258,31 @@ def lihat_progress_window(username):
     center_window(progressWindow, 1280, 720)
     progressWindow.mainloop()
     
+def show_graph_window():
+    # Membuat jendela baru
+    graphWindow = tk.Toplevel()
+    graphWindow.title("Jendela Grafik")
+
+    # Membuat data untuk grafik
+    x = [1, 2, 3, 4, 5]
+    y = [1, 4, 9, 16, 25]
+
+    # Membuat figure dan axes menggunakan matplotlib
+    fig, ax = plt.subplots()
+    ax.plot(x, y, label="Grafik Contoh")
+    ax.set_title("Contoh Grafik")
+    ax.set_xlabel("X-Axis")
+    ax.set_ylabel("Y-Axis")
+    ax.legend()
+
+    # Menambahkan grafik ke Tkinter menggunakan FigureCanvasTkAgg
+    canvas = FigureCanvasTkAgg(fig, master=graphWindow)
+    canvas_widget = canvas.get_tk_widget()
+    canvas_widget.pack(fill=tk.BOTH, expand=True)
+
+    # Tombol untuk menutup jendela
+    tk.Button(graphWindow, text="Tutup", command=graphWindow.destroy).pack(pady=10)
+
 # Fungsi utama untuk memulai program
 def main():
     login_window()

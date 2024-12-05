@@ -36,13 +36,13 @@ def login_window():
     loginWindow.title("Login")
 
     # Pasang gambar background
-    bg_image = Image.open(r'D:\Kelompok_8_Aplikasi_Pencatat_Kesehatan_TIUNS24\background.jpg')  # Pastikan file ini ada di direktori yang sama
+    bg_image = Image.open(r'images/background.jpg')  # Pastikan file ini ada di direktori yang sama
     bg_image = bg_image.resize((loginWindow.winfo_screenwidth(), loginWindow.winfo_screenheight()))
     bg_photo = ImageTk.PhotoImage(bg_image)
     bg_label = tk.Label(loginWindow, image=bg_photo)
     bg_label.place(relwidth=1, relheight=1)
 
-    frame = tk.Frame(loginWindow, bg="white", padx=20, pady=20)
+    frame = tk.Frame(loginWindow, bg="blue", padx=5, pady=5)
     frame.place(relx=0.5, rely=0.5, anchor="center")
 
     tk.Label(frame, text="Username:", bg="white").grid(row=0, column=0, padx=5, pady=5)
@@ -80,7 +80,7 @@ def register_window():
     registerWindow.title("Daftar")
 
     # Pasang gambar background
-    bg_image = Image.open(r'D:\Kelompok_8_Aplikasi_Pencatat_Kesehatan_TIUNS24\background.jpg')
+    bg_image = Image.open(r'images/background.jpg')
     bg_image = bg_image.resize((registerWindow.winfo_screenwidth(), registerWindow.winfo_screenheight()))
     bg_photo = ImageTk.PhotoImage(bg_image)
     bg_label = tk.Label(registerWindow, image=bg_photo)
@@ -141,94 +141,68 @@ def register_window():
     registerWindow.mainloop()
 
 # Fungsi untuk jendela utama setelah login
-def open_main_window(uname):
+def open_main_window(username):
     mainWindow = tk.Tk()
     mainWindow.title("Aplikasi Pencatat Kesehatan Harian")
     
-    bg_image = Image.open(r'D:\Kelompok_8_Aplikasi_Pencatat_Kesehatan_TIUNS24\background.jpg')
+    bg_image = Image.open(r'images/background.jpg')
     bg_image = bg_image.resize((mainWindow.winfo_screenwidth(), mainWindow.winfo_screenheight()))
     bg_photo = ImageTk.PhotoImage(bg_image)
     bg_label = tk.Label(mainWindow, image=bg_photo)
     bg_label.place(relwidth=1, relheight=1)
-     
-        # Layout utama
+
     frame = tk.Frame(mainWindow, bg="white", padx=20, pady=20)
     frame.place(relx=0.5, rely=0.5, anchor="center")
+
+    tk.Label(frame, text=f"Selamat Datang, {username}!", font=("Arial", 16), bg="lightblue").pack(pady=10)
+    tk.Label(frame, text=f"Target Anda: {user_data[username]['target']}", font=("Arial", 12), bg="lightblue").pack(pady=5)
     
-        # Target kesehatan harian
-    uname.targets = {"steps": 8000, "sleep": 7, "water": 2}
-    uname.health_data = []  # Data kesehatan harian
-        
-    tk.Label(uname.main_frame, text="--- Aplikasi Pencatat Kesehatan Harian ---", font=("Arial", 14)).pack(pady=5)
-    tk.Button(uname.main_frame, text="Input Data Harian", command=uname.input_data).pack(fill="x", pady=5)
-    tk.Button(uname.main_frame, text="Lihat Progres", command=uname.show_progress).pack(fill="x", pady=5)
-    tk.Button(uname.main_frame, text="Keluar", command=root.quit).pack(fill="x", pady=5)
+    def switch_input_harian():
+        input_harian_window()
     
-    def input_data(uname):
-        """Fungsi untuk input data kesehatan harian"""
-        try:
-            steps = int(askstring("Input Data", "Masukkan jumlah langkah harian (x):"))
-            sleep = float(askstring("Input Data", "Masukkan durasi tidur harian dalam jam (y):"))
-            water = float(askstring("Input Data", "Masukkan konsumsi air harian dalam liter (z):"))
-            uname.health_data.append({"steps": steps, "sleep": sleep, "water": water})
-            messagebox.showinfo("Sukses", "Data berhasil ditambahkan!")
-        except (ValueError, TypeError):
-            messagebox.showerror("Error", "Input tidak valid! Pastikan data yang dimasukkan benar.")
-    
-    def calculate_average(uname):
-        """Menghitung rata-rata untuk semua data yang ada"""
-        total_days = len(uname.health_data)
-        avg_steps = sum(day["steps"] for day in uname.health_data) / total_days
-        avg_sleep = sum(day["sleep"] for day in uname.health_data) / total_days
-        avg_water = sum(day["water"] for day in uname.health_data) / total_days
-        return avg_steps, avg_sleep, avg_water
-    
-    def check_targets(uname, avg_steps, avg_sleep, avg_water):
-        """Mengevaluasi apakah target tercapai"""
-        return {
-            "steps": avg_steps >= uname.targets["steps"],
-            "sleep": avg_sleep >= uname.targets["sleep"],
-            "water": avg_water >= uname.targets["water"]
-        }
-    
-    def show_progress(uname):
-        """Fungsi untuk menampilkan progres kesehatan"""
-        if not uname.health_data:
-            messagebox.showinfo("Info", "Belum ada data kesehatan yang tercatat.")
-            return
+    def switch_to_lihat_progress():
+        lihat_progress_window()
         
-        # Hitung rata-rata
-        avg_steps, avg_sleep, avg_water = uname.calculate_average()
-        results = uname.check_targets(avg_steps, avg_sleep, avg_water)
-        
-        # Tampilkan hasil progres
-        progress_text = (
-            f"--- Hasil Progres Kesehatan ---\n\n"
-            f"Rata-rata langkah: {avg_steps:.2f}\n"
-            f"Rata-rata tidur: {avg_sleep:.2f} jam\n"
-            f"Rata-rata konsumsi air: {avg_water:.2f} liter\n\n"
-        )
-        if all(results.values()):
-            progress_text += "Semua target tercapai! Lanjutkan kerja baik ini!"
-        else:
-            progress_text += "Beberapa target belum tercapai:\n"
-        if not results["steps"]:
-            progress_text += "- Target langkah belum tercapai.\n"
-        if not results["sleep"]:
-            progress_text += "- Target tidur belum tercapai.\n"
-        if not results["water"]:
-            progress_text += "- Target konsumsi air belum tercapai.\n"
-            progress_text += "Tetap semangat untuk meningkatkan kesehatan!"
-        
-        messagebox.showinfo("Progres Kesehatan", progress_text)
-        
+    tk.Button(frame, text="Input Data Harian", command=switch_input_harian).pack(pady=20)
+    tk.Button(frame, text="Lihat Progress", command=switch_to_lihat_progress).pack(pady=20)
+    tk.Button(frame, text="Keluar", command=mainWindow.destroy).pack(pady=20)
+
     center_window(mainWindow, 1280, 720)
     mainWindow.mainloop()
+
+def input_harian_window():
+    inputWindow = tk.Tk()
+    inputWindow.title("Input Data Harian")
+    
+    bg_image = Image.open(r'images/background.jpg')
+    bg_image = bg_image.resize((inputWindow.winfo_screenwidth(), inputWindow.winfo_screenheight()))
+    bg_photo = ImageTk.PhotoImage(bg_image)
+    bg_label = tk.Label(inputWindow, image=bg_photo)
+    bg_label.place(relwidth=1, relheight=1)
+
+    frame = tk.Frame(inputWindow, bg="white", padx=20, pady=20)
+    frame.place(relx=0.5, rely=0.5, anchor="center")
+    
+    tk.Label(frame, text=f"Selamat Datang, {username}!", font=("Arial", 16), bg="lightblue").pack(pady=10)
+    tk.Label(frame, text=f"Target Anda: {user_data[username]['target']}", font=("Arial", 12), bg="lightblue").pack(pady=5)
+    
+    center_window(inputWindow, 1280, 720)
+    inputWindow.mainloop()
+
+def lihat_progress_window():
+    progressWindow = tk.Tk()
+    progressWindow.title("Lihat Progress")
+    
+    bg_image = Image.open(r'images/background.jpg')
+    bg_image = bg_image.resize((progressWindow.winfo_screenwidth(), progressWindow.winfo_screenheight()))
+    bg_photo = ImageTk.PhotoImage(bg_image)
+    bg_label = tk.Label(progressWindow, image=bg_photo)
+    bg_label.place(relwidth=1, relheight=1)
+    
 
 # Fungsi utama untuk memulai program
 def main():
     login_window()
-    open_main_window(uname)
 
 if __name__ == "__main__":
     main()

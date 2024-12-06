@@ -197,25 +197,42 @@ def input_harian_window(parent):
     tk.Label(frame, text="Input Data Anda", font=("Arial", 12), bg="lightblue").pack(pady=5)
     
     def switch_to_input_langkah():
-        
+        input_langkah_window()
+    
+    tk.Button(frame, text="Langkah", command=switch_to_input_langkah).pack(pady=15)
         
     def switch_to_input_jamtidur():
+        input_jamtidur_window()
         
+    tk.Button(frame, text="Jam Tidur", command=switch_to_input_jamtidur).pack(pady=15)
     
     def switch_to_input_gelasair():
-        
+        input_gelasair_window()
     
-    tk.Button(frame, text="Langkah", command=input_langkah_window).pack(pady=15)
-    tk.Button(frame, text="Jam Tidur", command=input_jamtidur_window).pack(pady=15)
-    tk.Button(frame, text="Gelas Air", command=input_gelasair_window).pack(pady=15)
+    tk.Button(frame, text="Gelas Air", command=switch_to_input_gelasair).pack(pady=15)
+    
+    def inputharian_ke_main_window():
+        inputWindow.destroy()
+        open_main_window(username)
+    
+    tk.Button(frame, text="Kembali", command=inputharian_ke_main_window).pack(pady=15)
     
     center_window(inputWindow, 640, 320)
 
 def input_langkah_window():
+    inputlangkahWindow = tk.Toplevel()
+    inputlangkahWindow.title("Input Langkah")
+
+    frame = tk.Frame(inputlangkahWindow, bg="white", padx=20, pady=20)
+    frame.place(relx=0.5, rely=0.5, anchor="center")
 
 def input_jamtidur_window():
-
+    inputjamtidurWindow = tk.Toplevel()
+    inputjamtidurWindow.title("Input Jam Tidur")
+    
 def input_gelasair_window():
+    inputgelasairWindow = tk.Toplevel()
+    inputgelasairWindow.title("Input Gelas Air")
     
 def lihat_progress_window(username):
     progressWindow = tk.Tk()
@@ -249,11 +266,11 @@ def lihat_progress_window(username):
     
     tk.Button(frame, text="Grafik", command=grafik_window).pack(pady=15)
     
-    def kembali_ke_main_window():
+    def progress_ke_main_window():
         progressWindow.destroy()  # Tutup jendela progress
         open_main_window(username)  # Buka jendela main
     
-    tk.Button(frame, text="Kembali", command=kembali_ke_main_window).pack(pady=15)
+    tk.Button(frame, text="Kembali", command=progress_ke_main_window).pack(pady=15)
     
     center_window(progressWindow, 1280, 720)
     progressWindow.mainloop()

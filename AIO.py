@@ -101,7 +101,7 @@ def register_window():
     tk.Label(frame, text="Target yang diinginkan:", bg="white").grid(row=2, column=0, padx=5, pady=5)
     tk.Label(frame, text="Jumlah langkah/hari:", bg="white").grid(row=3, column=0, padx=5, pady=5)
     tk.Label(frame, text="Jam tidur/hari:", bg="white").grid(row=4, column=0, padx=5, pady=5)
-    tk.Label(frame, text="Jumlah gelas air minum(250ml)/hari:", bg="white").grid(row=5, column=0, padx=5, pady=5)
+    tk.Label(frame, text="Jumlah gelas air minum(per 250ml)/hari:", bg="white").grid(row=5, column=0, padx=5, pady=5)
 
     username = tk.Entry(frame)
     password = tk.Entry(frame, show="*")
@@ -126,14 +126,20 @@ def register_window():
         uname = username.get()
         pwd = password.get()
         target = target_variable.get()
-        lgkh = langkah.get()
-        jmTdr = jamTidur.get()
-        glsair = gelasair.get()
+        steps = langkah.get()
+        sleep = jamTidur.get()
+        water = gelasair.get()
 
         if uname in user_data:
             msgbox.showerror("Gagal Daftar", "Username sudah terdaftar.")
         elif uname and pwd:
-            user_data[uname] = {"password": pwd, "target": target, "langkah": lgkh, "jamTidur": jmTdr, "gelasair": glsair}
+            user_data[uname] = {
+                "password": pwd,
+                "target": target,
+                "langkah": steps,
+                "jamTidur": sleep,
+                "gelasair": water
+            }
             save_database(user_data)
             msgbox.showinfo("Berhasil Daftar", "Akun berhasil dibuat!")
             registerWindow.destroy()
@@ -209,20 +215,20 @@ def input_harian_window(parent):
     tk.Label(frame, text="Selamat Datang!", font=("Arial", 16), bg="lightblue").pack(pady=10)
     tk.Label(frame, text="Input Data Anda", font=("Arial", 12), bg="lightblue").pack(pady=5)
     
-    def switch_to_input_langkah():
-        input_langkah_window()
+    def switch_to_input_steps():
+        input_steps_window()
     
-    tk.Button(frame, text="Langkah", command=switch_to_input_langkah).pack(padx=5)
+    tk.Button(frame, text="Langkah", command=switch_to_input_steps).pack(padx=5)
         
-    def switch_to_input_jamtidur():
-        input_jamtidur_window()
+    def switch_to_input_sleep():
+        input_sleep_window()
         
-    tk.Button(frame, text="Jam Tidur", command=switch_to_input_jamtidur).pack(padx=5)
+    tk.Button(frame, text="Jam Tidur", command=switch_to_input_sleep).pack(padx=5)
     
-    def switch_to_input_gelasair():
-        input_gelasair_window()
+    def switch_to_input_water():
+        input_water_window()
     
-    tk.Button(frame, text="Gelas Air", command=switch_to_input_gelasair).pack(padx=5)
+    tk.Button(frame, text="Gelas Air", command=switch_to_input_water).pack(padx=5)
     
     def inputharian_ke_main_window():
         inputWindow.destroy()
@@ -232,20 +238,110 @@ def input_harian_window(parent):
     
     center_window(inputWindow, 640, 320)
 
-def input_langkah_window():
-    inputlangkahWindow = tk.Toplevel()
-    inputlangkahWindow.title("Input Langkah")
+def input_steps_window():
+    inputstepsWindow = tk.Toplevel()
+    inputstepsWindow.title("Input Langkah")
 
-    frame = tk.Frame(inputlangkahWindow, bg="pink", padx=20, pady=20)
+    frame = tk.Frame(inputstepsWindow, bg="pink", padx=5, pady=5)
     frame.place(relx=0.5, rely=0.5, anchor="center")
-
-def input_jamtidur_window():
-    inputjamtidurWindow = tk.Toplevel()
-    inputjamtidurWindow.title("Input Jam Tidur")
     
-def input_gelasair_window():
-    inputgelasairWindow = tk.Toplevel()
-    inputgelasairWindow.title("Input Gelas Air")
+    tk.Label(frame, text="Masukkan Jumlah Langkah:", font=("Arial", 14), bg="pink").grid(row=0, column=0, columnspan=2, pady=10)
+
+    # Input jumlah langkah
+    steps_var = tk.StringVar()
+    tk.Entry(frame, textvariable=steps_var, width=20).grid(row=1, column=0, columnspan=2, pady=5)
+
+    def save_steps():
+        try:
+            steps = int(steps_var.get())
+            if username not in user_data:
+                user_data[username] = {"steps": []}
+            
+            # Tambahkan langkah ke database
+            user_data[username]["steps"].append(steps)
+            save_database(user_data)
+
+            tk.Label(frame, text="Data berhasil disimpan!", bg="pink", fg="green").grid(row=3, column=0, columnspan=2, pady=10)
+            steps_var.set("")  # Bersihkan input
+        except ValueError:
+            tk.Label(frame, text="Masukkan angka yang valid!", bg="pink", fg="red").grid(row=3, column=0, columnspan=2, pady=10)
+
+    # Tombol untuk menyimpan langkah
+    tk.Button(frame, text="Simpan", command=save_steps).grid(row=2, column=0, pady=10)
+    tk.Button(frame, text="Tutup", command=inputstepsWindow.destroy).grid(row=2, column=1, pady=10)
+    
+    center_window(inputstepsWindow, 640, 320)
+    inputstepsWindow.mainloop()
+
+def input_sleep_window():
+    inputsleepWindow = tk.Toplevel()
+    inputsleepWindow.title("Input Jam Tidur")
+    
+    frame = tk.Frame(inputsleepWindow, bg="pink", padx=5, pady=5)
+    frame.place(relx=0.5, rely=0.5, anchor="center")
+    
+    tk.Label(frame, text="Masukkan Jam Tidur:", font=("Arial", 14), bg="pink").grid(row=0, column=0, columnspan=2, pady=10)
+
+    # Input jumlah langkah
+    sleep_var = tk.StringVar()
+    tk.Entry(frame, textvariable=sleep_var, width=20).grid(row=1, column=0, columnspan=2, pady=5)
+
+    def save_sleep():
+        try:
+            sleep = int(sleep_var.get())
+            if username not in user_data:
+                user_data[username] = {"sleep": []}
+            
+            # Tambahkan langkah ke database
+            user_data[username]["sleep"].append(sleep)
+            save_database(user_data)
+
+            tk.Label(frame, text="Data berhasil disimpan!", bg="pink", fg="green").grid(row=3, column=0, columnspan=2, pady=10)
+            sleep_var.set("")  # Bersihkan input
+        except ValueError:
+            tk.Label(frame, text="Masukkan angka yang valid!", bg="pink", fg="red").grid(row=3, column=0, columnspan=2, pady=10)
+
+    # Tombol untuk menyimpan langkah
+    tk.Button(frame, text="Simpan", command=save_sleep).grid(row=2, column=0, pady=10)
+    tk.Button(frame, text="Tutup", command=inputsleepWindow.destroy).grid(row=2, column=1, pady=10)
+    
+    center_window(inputsleepWindow, 640, 320)
+    inputsleepWindow.mainloop()
+    
+def input_water_window():
+    inputwaterWindow = tk.Toplevel()
+    inputwaterWindow.title("Input Gelas Air")
+    
+    frame = tk.Frame(inputwaterWindow, bg="pink", padx=5, pady=5)
+    frame.place(relx=0.5, rely=0.5, anchor="center")
+    
+    tk.Label(frame, text="Masukkan Jumlah Gelas Air(per 250ml):", font=("Arial", 14), bg="pink").grid(row=0, column=0, columnspan=2, pady=10)
+
+    # Input jumlah langkah
+    water_var = tk.StringVar()
+    tk.Entry(frame, textvariable=water_var, width=20).grid(row=1, column=0, columnspan=2, pady=5)
+
+    def save_water():
+        try:
+            water = int(water_var.get())
+            if username not in user_data:
+                user_data[username] = {"water": []}
+            
+            # Tambahkan langkah ke database
+            user_data[username]["water"].append(water)
+            save_database(user_data)
+
+            tk.Label(frame, text="Data berhasil disimpan!", bg="pink", fg="green").grid(row=3, column=0, columnspan=2, pady=10)
+            water_var.set("")  # Bersihkan input
+        except ValueError:
+            tk.Label(frame, text="Masukkan angka yang valid!", bg="pink", fg="red").grid(row=3, column=0, columnspan=2, pady=10)
+
+    # Tombol untuk menyimpan langkah
+    tk.Button(frame, text="Simpan", command=save_water).grid(row=2, column=0, pady=10)
+    tk.Button(frame, text="Tutup", command=inputwaterWindow.destroy).grid(row=2, column=1, pady=10)
+    
+    center_window(inputwaterWindow, 640, 320)
+    inputwaterWindow.mainloop()
     
 def lihat_progress_window(username):
     progressWindow = tk.Tk()

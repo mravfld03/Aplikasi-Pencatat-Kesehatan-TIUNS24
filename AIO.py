@@ -254,11 +254,18 @@ def input_steps_window():
     def save_steps():
         try:
             steps = int(steps_var.get())
+            today = str(date.today())  # Dapatkan tanggal hari ini dalam format string (YYYY-MM-DD)
+
             if username not in user_data:
-                user_data[username] = {"steps": []}
-            
-            # Tambahkan langkah ke database
-            user_data[username]["steps"].append(steps)
+                msgbox.showerror("Error", f"Username '{username}' tidak ditemukan.")
+                return
+
+            # Pastikan "data_harian" ada dalam data user
+            if "data_harian" not in user_data[username]:
+                user_data[username]["data_harian"] = {}
+
+            # Simpan data langkah untuk tanggal hari ini
+            user_data[username]["data_harian"][today] = steps
             save_database(user_data)
 
             tk.Label(frame, text="Data berhasil disimpan!", bg="pink", fg="green").grid(row=3, column=0, columnspan=2, pady=10)
@@ -361,8 +368,6 @@ def lihat_progress_window(username):
     bg_label = tk.Label(progressWindow, image=bg_photo)
     bg_label.image = bg_photo  # Simpan referensi
     bg_label.place(relwidth=1, relheight=1)
-    
-    
     
     frame = tk.Frame(progressWindow, bg="pink", padx=20, pady=20)
     frame.place(relx=0.5, rely=0.5, anchor="center")

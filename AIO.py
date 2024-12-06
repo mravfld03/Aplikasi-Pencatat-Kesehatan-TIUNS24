@@ -36,17 +36,20 @@ def center_window(window, width=1280, height=720):
 def login_window():
     loginWindow = tk.Tk()
     loginWindow.title("Login")
+    
+    loginWindow.state('zoomed')
 
     # Pasang gambar background
-    bg_image = Image.open(r'images/background.jpg')  # Pastikan file ini ada di direktori yang sama
+    bg_image = Image.open(r'images/bgutama.jpg')  # Pastikan file ini ada di direktori yang sama
     bg_image = bg_image.resize((loginWindow.winfo_screenwidth(), loginWindow.winfo_screenheight()))
     bg_photo = ImageTk.PhotoImage(bg_image)
     bg_label = tk.Label(loginWindow, image=bg_photo)
     bg_label.place(relwidth=1, relheight=1)
 
-    frame = tk.Frame(loginWindow, bg="blue", padx=5, pady=5)
+    frame = tk.Frame(loginWindow, bg="pink", padx=5, pady=5)
     frame.place(relx=0.5, rely=0.5, anchor="center")
 
+    tk.Label(text=f"Selamat datang di Aplikasi Pencatat Kesehatan Harian", font=("Arial", 24), bg="pink").pack(pady=100)
     tk.Label(frame, text="Username:", bg="white").grid(row=0, column=0, padx=5, pady=5)
     tk.Label(frame, text="Password:", bg="white").grid(row=1, column=0, padx=5, pady=5)
 
@@ -80,15 +83,17 @@ def login_window():
 def register_window():
     registerWindow = tk.Tk()
     registerWindow.title("Daftar")
+    
+    registerWindow.state('zoomed')
 
     # Pasang gambar background
-    bg_image = Image.open(r'images/background.jpg')
+    bg_image = Image.open(r'images/bgutama.jpg')
     bg_image = bg_image.resize((registerWindow.winfo_screenwidth(), registerWindow.winfo_screenheight()))
     bg_photo = ImageTk.PhotoImage(bg_image)
     bg_label = tk.Label(registerWindow, image=bg_photo)
     bg_label.place(relwidth=1, relheight=1)
 
-    frame = tk.Frame(registerWindow, bg="white", padx=20, pady=20)
+    frame = tk.Frame(registerWindow, bg="pink", padx=20, pady=20)
     frame.place(relx=0.5, rely=0.5, anchor="center")
 
     tk.Label(frame, text="Username:", bg="white").grid(row=0, column=0, padx=5, pady=5)
@@ -147,15 +152,18 @@ def open_main_window(username):
     mainWindow = tk.Tk()
     mainWindow.title("Aplikasi Pencatat Kesehatan Harian")
     
-    bg_image = Image.open(r'images/background.jpg')
+    mainWindow.state('zoomed')
+    
+    bg_image = Image.open(r'images/bgutama.jpg')
     bg_image = bg_image.resize((mainWindow.winfo_screenwidth(), mainWindow.winfo_screenheight()))
     bg_photo = ImageTk.PhotoImage(bg_image)
     bg_label = tk.Label(mainWindow, image=bg_photo)
     bg_label.place(relwidth=1, relheight=1)
 
-    frame = tk.Frame(mainWindow, bg="white", padx=20, pady=20)
+    frame = tk.Frame(mainWindow, bg="pink", padx=20, pady=20)
     frame.place(relx=0.5, rely=0.5, anchor="center")
 
+    tk.Label(text=f"Aplikasi Pencatat Kesehatan Harian", font=("Arial", 24), bg="pink").pack(pady=100)
     tk.Label(frame, text=f"Selamat Datang, {username}!", font=("Arial", 16), bg="lightblue").pack(pady=10)
     tk.Label(frame, text=f"Target Anda: {user_data[username]['target']}", font=("Arial", 12), bg="lightblue").pack(pady=5)
     
@@ -166,9 +174,14 @@ def open_main_window(username):
         mainWindow.destroy()
         lihat_progress_window(username)
         
-    tk.Button(frame, text="Input Data Harian", command=switch_input_harian).pack(pady=20)
-    tk.Button(frame, text="Lihat Progress", command=switch_to_lihat_progress).pack(pady=20)
-    tk.Button(frame, text="Keluar", command=mainWindow.destroy).pack(pady=20)
+    def confirm_exit():
+        response = msgbox.askyesno("Konfirmasi Keluar", "Anda yakin ingin keluar?")
+        if response:
+            mainWindow.destroy()
+            
+    tk.Button(frame, text="Input Data Harian", command=switch_input_harian).pack(padx=5)
+    tk.Button(frame, text="Lihat Progress", command=switch_to_lihat_progress).pack(padx=5)
+    tk.Button(frame, text="Keluar", command=confirm_exit).pack(pady=15)
 
     center_window(mainWindow, 1280, 720)
     mainWindow.mainloop()
@@ -182,7 +195,7 @@ def input_harian_window(parent):
     screen_height = parent.winfo_screenheight()
     
     # Muat gambar latar belakang
-    bg_image = Image.open(r'images/background.jpg')
+    bg_image = Image.open(r'images/bgutama.jpg')
     bg_image = bg_image.resize((screen_width, screen_height))
     bg_photo = ImageTk.PhotoImage(bg_image)
     
@@ -190,7 +203,7 @@ def input_harian_window(parent):
     bg_label = tk.Label(inputWindow, image=bg_photo)
     bg_label.image = bg_photo  # Simpan referensi
     bg_label.place(relwidth=1, relheight=1)
-    frame = tk.Frame(inputWindow, bg="white", padx=20, pady=20)
+    frame = tk.Frame(inputWindow, bg="pink", padx=20, pady=20)
     frame.place(relx=0.5, rely=0.5, anchor="center")
     
     tk.Label(frame, text="Selamat Datang!", font=("Arial", 16), bg="lightblue").pack(pady=10)
@@ -199,17 +212,17 @@ def input_harian_window(parent):
     def switch_to_input_langkah():
         input_langkah_window()
     
-    tk.Button(frame, text="Langkah", command=switch_to_input_langkah).pack(pady=15)
+    tk.Button(frame, text="Langkah", command=switch_to_input_langkah).pack(padx=5)
         
     def switch_to_input_jamtidur():
         input_jamtidur_window()
         
-    tk.Button(frame, text="Jam Tidur", command=switch_to_input_jamtidur).pack(pady=15)
+    tk.Button(frame, text="Jam Tidur", command=switch_to_input_jamtidur).pack(padx=5)
     
     def switch_to_input_gelasair():
         input_gelasair_window()
     
-    tk.Button(frame, text="Gelas Air", command=switch_to_input_gelasair).pack(pady=15)
+    tk.Button(frame, text="Gelas Air", command=switch_to_input_gelasair).pack(padx=5)
     
     def inputharian_ke_main_window():
         inputWindow.destroy()
@@ -223,7 +236,7 @@ def input_langkah_window():
     inputlangkahWindow = tk.Toplevel()
     inputlangkahWindow.title("Input Langkah")
 
-    frame = tk.Frame(inputlangkahWindow, bg="white", padx=20, pady=20)
+    frame = tk.Frame(inputlangkahWindow, bg="pink", padx=20, pady=20)
     frame.place(relx=0.5, rely=0.5, anchor="center")
 
 def input_jamtidur_window():
@@ -238,11 +251,13 @@ def lihat_progress_window(username):
     progressWindow = tk.Tk()
     progressWindow.title("Lihat Progress")
     
+    progressWindow.state('zoomed')
+    
     screen_width = progressWindow.winfo_screenwidth()
     screen_height = progressWindow.winfo_screenheight()
     
     # Muat gambar latar belakang
-    bg_image = Image.open(r'images/background.jpg')
+    bg_image = Image.open(r'images/bgutama.jpg')
     bg_image = bg_image.resize((screen_width, screen_height))
     bg_photo = ImageTk.PhotoImage(bg_image)
     
@@ -253,18 +268,18 @@ def lihat_progress_window(username):
     
     
     
-    frame = tk.Frame(progressWindow, bg="white", padx=20, pady=20)
+    frame = tk.Frame(progressWindow, bg="pink", padx=20, pady=20)
     frame.place(relx=0.5, rely=0.5, anchor="center")
     
     tk.Label(frame, text="Selamat Datang!", font=("Arial", 16), bg="lightblue").pack(pady=10)
     tk.Label(frame, text="Pilih Progress", font=("Arial", 12), bg="lightblue").pack(pady=5)
-    tk.Button(frame, text="Harian", command=progressWindow.destroy).pack(pady=15)
-    tk.Button(frame, text=f"{user_data[username]['target']}", command=progressWindow.destroy).pack(pady=15)
+    tk.Button(frame, text="Harian", command=progressWindow.destroy).pack(padx=5)
+    tk.Button(frame, text=f"{user_data[username]['target']}", command=progressWindow.destroy).pack(padx=5)
     
     def grafik_window():
         show_graph_window()
     
-    tk.Button(frame, text="Grafik", command=grafik_window).pack(pady=15)
+    tk.Button(frame, text="Grafik", command=grafik_window).pack(padx=5)
     
     def progress_ke_main_window():
         progressWindow.destroy()  # Tutup jendela progress

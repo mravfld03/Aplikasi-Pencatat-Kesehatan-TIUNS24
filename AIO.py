@@ -5,7 +5,7 @@ import json
 import os
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from datetime import date
+from datetime import date, datetime
 
 # Nama file database
 database_file = "user_database.json"
@@ -244,11 +244,26 @@ def input_harian_window(parent_window, username):
     center_window(inputWindow, 640, 320)
 
 def input_steps_window(username):
-    inputstepsWindow = tk.Toplevel()
-    inputstepsWindow.title("Input Langkah")
+    stepsWindow = tk.Toplevel()
+    stepsWindow.title("Input Langkah")
 
-    frame = tk.Frame(inputstepsWindow, bg="pink", padx=5, pady=5)
+    frame = tk.Frame(stepsWindow, bg="pink", padx=5, pady=5)
     frame.place(relx=0.5, rely=0.5, anchor="center")
+    
+    last_steps_label = tk.Label(frame, text="", font=("Arial", 10), bg="pink", fg="blue")
+    last_steps_label.grid(row=2, column=0, columnspan=2, pady=14)
+    
+    today = str(date.today())  # Dapatkan tanggal hari ini dalam format string (YYYY-MM-DD)
+    
+    if username in user_data and "data_harian_steps" in user_data[username]:
+        if today in user_data[username]["data_harian_steps"]:
+            last_steps = user_data[username]["data_harian_steps"][today]
+            last_time = user_data[username]["data_harian_steps"].get(f"{today}_time", "Tidak diketahui")
+            last_steps_label.config(text=f"Data terakhir: {last_steps} langkah pada {last_time}")
+        else:
+            last_steps_label.config(text="Belum ada data langkah untuk hari ini.")
+    else:
+        last_steps_label.config(text="Belum ada data langkah sebelumnya.")
     
     tk.Label(frame, text="Masukkan Jumlah Langkah:", font=("Arial", 14), bg="pink").grid(row=0, column=0, columnspan=2, pady=10)
 
@@ -259,7 +274,6 @@ def input_steps_window(username):
     def save_steps():
         try:
             steps = int(steps_var.get())
-            today = str(date.today())  # Dapatkan tanggal hari ini dalam format string (YYYY-MM-DD)
 
             if username not in user_data:
                 msgbox.showerror("Error", f"Username '{username}' tidak ditemukan.")
@@ -270,8 +284,12 @@ def input_steps_window(username):
                 user_data[username]["data_harian_steps"] = {}
 
             # Simpan data langkah untuk tanggal hari ini
+            now = datetime.now().strftime("%H:%M:%S")  # Waktu sekarang
             user_data[username]["data_harian_steps"][today] = steps
+            user_data[username]["data_harian_steps"][f"{today}_time"] = now
             save_database(user_data)
+            
+            last_steps_label.config(text=f"Data terakhir: {steps} langkah pada {now}")
 
             tk.Label(frame, text="Data berhasil disimpan!", bg="pink", fg="green").grid(row=3, column=0, columnspan=2, pady=10)
             steps_var.set("")  # Bersihkan input
@@ -279,29 +297,43 @@ def input_steps_window(username):
             tk.Label(frame, text="Masukkan angka yang valid!", bg="pink", fg="red").grid(row=3, column=0, columnspan=2, pady=10)
 
     # Tombol untuk menyimpan langkah
-    tk.Button(frame, text="Simpan", command=save_steps).grid(row=2, column=0, pady=10)
-    tk.Button(frame, text="Tutup", command=inputstepsWindow.destroy).grid(row=2, column=1, pady=10)
+    tk.Button(frame, text="Simpan", command=save_steps).grid(row=4, column=0, pady=10)
+    tk.Button(frame, text="Tutup", command=stepsWindow.destroy).grid(row=4, column=1, pady=10)
     
-    center_window(inputstepsWindow, 640, 320)
-    inputstepsWindow.mainloop()
+    center_window(stepsWindow, 640, 320)
+    stepsWindow.mainloop()
 
 def input_sleep_window(username):
-    inputsleepWindow = tk.Toplevel()
-    inputsleepWindow.title("Input Jam Tidur")
+    sleepWindow = tk.Toplevel()
+    sleepWindow.title("Input Jam Tidur")
     
-    frame = tk.Frame(inputsleepWindow, bg="pink", padx=5, pady=5)
+    frame = tk.Frame(sleepWindow, bg="pink", padx=5, pady=5)
     frame.place(relx=0.5, rely=0.5, anchor="center")
+    
+    last_sleep_label = tk.Label(frame, text="", font=("Arial", 10), bg="pink", fg="blue")
+    last_sleep_label.grid(row=2, column=0, columnspan=2, pady=14)
+    
+    today = str(date.today())  # Dapatkan tanggal hari ini dalam format string (YYYY-MM-DD)
+    
+    if username in user_data and "data_harian_sleep" in user_data[username]:
+        if today in user_data[username]["data_harian_sleep"]:
+            last_sleep = user_data[username]["data_harian_sleep"][today]
+            last_time = user_data[username]["data_harian_sleep"].get(f"{today}_time", "Tidak diketahui")
+            last_sleep_label.config(text=f"Data terakhir: {last_sleep} jam tidur pada {last_time}")
+        else:
+            last_sleep_label.config(text="Belum ada data jam tidur untuk hari ini.")
+    else:
+        last_sleep_label.config(text="Belum ada data jam tidur sebelumnya.")
     
     tk.Label(frame, text="Masukkan Jam Tidur:", font=("Arial", 14), bg="pink").grid(row=0, column=0, columnspan=2, pady=10)
 
-    # Input jumlah langkah
+    # Input jumlah jam tidur
     sleep_var = tk.StringVar()
     tk.Entry(frame, textvariable=sleep_var, width=20).grid(row=1, column=0, columnspan=2, pady=5)
 
     def save_sleep():
         try:
             sleep = int(sleep_var.get())
-            today = str(date.today())  # Dapatkan tanggal hari ini dalam format string (YYYY-MM-DD)
 
             if username not in user_data:
                 msgbox.showerror("Error", f"Username '{username}' tidak ditemukan.")
@@ -311,39 +343,57 @@ def input_sleep_window(username):
             if "data_harian_sleep" not in user_data[username]:
                 user_data[username]["data_harian_sleep"] = {}
 
-            # Simpan data langkah untuk tanggal hari ini
+            # Simpan data jam tidur untuk tanggal hari ini
+            now = datetime.now().strftime("%H:%M:%S")  # Waktu sekarang
             user_data[username]["data_harian_sleep"][today] = sleep
+            user_data[username]["data_harian_sleep"][f"{today}_time"] = now
             save_database(user_data)
+            
+            last_sleep_label.config(text=f"Data terakhir: {sleep} jam tidur pada {now}")
 
             tk.Label(frame, text="Data berhasil disimpan!", bg="pink", fg="green").grid(row=3, column=0, columnspan=2, pady=10)
             sleep_var.set("")  # Bersihkan input
         except ValueError:
             tk.Label(frame, text="Masukkan angka yang valid!", bg="pink", fg="red").grid(row=3, column=0, columnspan=2, pady=10)
 
-    # Tombol untuk menyimpan langkah
-    tk.Button(frame, text="Simpan", command=save_sleep).grid(row=2, column=0, pady=10)
-    tk.Button(frame, text="Tutup", command=inputsleepWindow.destroy).grid(row=2, column=1, pady=10)
+    # Tombol untuk menyimpan jam tidur
+    tk.Button(frame, text="Simpan", command=save_sleep).grid(row=4, column=0, pady=10)
+    tk.Button(frame, text="Tutup", command=sleepWindow.destroy).grid(row=4, column=1, pady=10)
     
-    center_window(inputsleepWindow, 640, 320)
-    inputsleepWindow.mainloop()
+    center_window(sleepWindow, 640, 320)
+    sleepWindow.mainloop()
     
 def input_water_window(username):
-    inputwaterWindow = tk.Toplevel()
-    inputwaterWindow.title("Input Gelas Air")
+    waterWindow = tk.Toplevel()
+    waterWindow.title("Input Gelas Air")
     
-    frame = tk.Frame(inputwaterWindow, bg="pink", padx=5, pady=5)
+    frame = tk.Frame(waterWindow, bg="pink", padx=5, pady=5)
     frame.place(relx=0.5, rely=0.5, anchor="center")
+    
+    last_water_label = tk.Label(frame, text="", font=("Arial", 10), bg="pink", fg="blue")
+    last_water_label.grid(row=2, column=0, columnspan=2, pady=14)
+    
+    today = str(date.today())  # Dapatkan tanggal hari ini dalam format string (YYYY-MM-DD)
+    
+    if username in user_data and "data_harian_water" in user_data[username]:
+        if today in user_data[username]["data_harian_water"]:
+            last_water = user_data[username]["data_harian_water"][today]
+            last_time = user_data[username]["data_harian_water"].get(f"{today}_time", "Tidak diketahui")
+            last_water_label.config(text=f"Data terakhir: {last_water} gelas air pada {last_time}")
+        else:
+            last_water_label.config(text="Belum ada data gelas air untuk hari ini.")
+    else:
+        last_water_label.config(text="Belum ada data gelas air sebelumnya.")
     
     tk.Label(frame, text="Masukkan Jumlah Gelas Air(per 250ml):", font=("Arial", 14), bg="pink").grid(row=0, column=0, columnspan=2, pady=10)
 
-    # Input jumlah langkah
+    # Input jumlah gelas air
     water_var = tk.StringVar()
     tk.Entry(frame, textvariable=water_var, width=20).grid(row=1, column=0, columnspan=2, pady=5)
 
     def save_water():
         try:
             water = int(water_var.get())
-            today = str(date.today())  # Dapatkan tanggal hari ini dalam format string (YYYY-MM-DD)
 
             if username not in user_data:
                 msgbox.showerror("Error", f"Username '{username}' tidak ditemukan.")
@@ -353,21 +403,25 @@ def input_water_window(username):
             if "data_harian_water" not in user_data[username]:
                 user_data[username]["data_harian_water"] = {}
 
-            # Simpan data langkah untuk tanggal hari ini
+            # Simpan data gelas air untuk tanggal hari ini
+            now = datetime.now().strftime("%H:%M:%S")  # Waktu sekarang
             user_data[username]["data_harian_water"][today] = water
+            user_data[username]["data_harian_water"][f"{today}_time"] = now
             save_database(user_data)
 
+            last_water_label.config(text=f"Data terakhir: {water} gelas air pada {now}")
+            
             tk.Label(frame, text="Data berhasil disimpan!", bg="pink", fg="green").grid(row=3, column=0, columnspan=2, pady=10)
             water_var.set("")  # Bersihkan input
         except ValueError:
             tk.Label(frame, text="Masukkan angka yang valid!", bg="pink", fg="red").grid(row=3, column=0, columnspan=2, pady=10)
 
-    # Tombol untuk menyimpan langkah
-    tk.Button(frame, text="Simpan", command=save_water).grid(row=2, column=0, pady=10)
-    tk.Button(frame, text="Tutup", command=inputwaterWindow.destroy).grid(row=2, column=1, pady=10)
+    # Tombol untuk menyimpan gelas air
+    tk.Button(frame, text="Simpan", command=save_water).grid(row=4, column=0, pady=10)
+    tk.Button(frame, text="Tutup", command=waterWindow.destroy).grid(row=4, column=1, pady=10)
     
-    center_window(inputwaterWindow, 640, 320)
-    inputwaterWindow.mainloop()
+    center_window(waterWindow, 640, 320)
+    waterWindow.mainloop()
     
 def lihat_progress_window(username):
     progressWindow = tk.Tk()

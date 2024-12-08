@@ -4,13 +4,33 @@
         "target": "Mingguan",
         "langkah": "10000",
         "jamTidur": "7",
-        "gelasair": "8"
+        "gelasair": "8",
+        "data_harian_steps": {
+            "2024-12-08": 5700,
+            "2024-12-08_time": "14:34:34"
+        },
+        "data_harian_sleep": {
+            "2024-12-08": 5,
+            "2024-12-08_time": "14:36:03"
+        }
     },
     "asdf": {
         "password": "asdf",
         "target": "Bulanan",
         "langkah": "10000",
         "jamTidur": "8",
-        "gelasair": "8"
+        "gelasair": "8",
+        "data_harian_steps": {
+            "2024-12-08": 7900,
+            "2024-12-08_time": "14:36:39"
+        },
+        "data_harian_sleep": {
+            "2024-12-08": 6,
+            "2024-12-08_time": "14:37:04"
+        },
+        "data_harian_water": {
+            "2024-12-08": 6,
+            "2024-12-08_time": "14:37:15"
+        }
     }
 }

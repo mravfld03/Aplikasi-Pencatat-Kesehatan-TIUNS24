@@ -5,6 +5,7 @@ import json
 import os
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from datetime import date
 
 # Nama file database
 database_file = "user_database.json"
@@ -155,14 +156,16 @@ def register_window():
 
 # Fungsi untuk jendela utama setelah login
 def open_main_window(username):
+    global bg_photo
+    
     mainWindow = tk.Tk()
     mainWindow.title("Aplikasi Pencatat Kesehatan Harian")
-    
     mainWindow.state('zoomed')
     
     bg_image = Image.open(r'images/bgutama.jpg')
     bg_image = bg_image.resize((mainWindow.winfo_screenwidth(), mainWindow.winfo_screenheight()))
     bg_photo = ImageTk.PhotoImage(bg_image)
+    
     bg_label = tk.Label(mainWindow, image=bg_photo)
     bg_label.place(relwidth=1, relheight=1)
 
@@ -174,7 +177,8 @@ def open_main_window(username):
     tk.Label(frame, text=f"Target Anda: {user_data[username]['target']}", font=("Arial", 12), bg="lightblue").pack(pady=5)
     
     def switch_input_harian():
-        input_harian_window(mainWindow)
+        mainWindow.withdraw()
+        input_harian_window(mainWindow, username)
     
     def switch_to_lihat_progress():
         mainWindow.destroy()
@@ -192,13 +196,13 @@ def open_main_window(username):
     center_window(mainWindow, 1280, 720)
     mainWindow.mainloop()
 
-def input_harian_window(parent):
-    inputWindow = tk.Toplevel(parent)
+def input_harian_window(parent_window, username):
+    inputWindow = tk.Toplevel(parent_window)
     inputWindow.title("Input Data Harian")
     
     # Dapatkan ukuran layar
-    screen_width = parent.winfo_screenwidth()
-    screen_height = parent.winfo_screenheight()
+    screen_width = parent_window.winfo_screenwidth()
+    screen_height = parent_window.winfo_screenheight()
     
     # Muat gambar latar belakang
     bg_image = Image.open(r'images/bgutama.jpg')
@@ -216,29 +220,30 @@ def input_harian_window(parent):
     tk.Label(frame, text="Input Data Anda", font=("Arial", 12), bg="lightblue").pack(pady=5)
     
     def switch_to_input_steps():
-        input_steps_window()
+        input_steps_window(username)
     
     tk.Button(frame, text="Langkah", command=switch_to_input_steps).pack(padx=5)
         
     def switch_to_input_sleep():
-        input_sleep_window()
+        input_sleep_window(username)
         
     tk.Button(frame, text="Jam Tidur", command=switch_to_input_sleep).pack(padx=5)
     
     def switch_to_input_water():
-        input_water_window()
+        input_water_window(username)
     
     tk.Button(frame, text="Gelas Air", command=switch_to_input_water).pack(padx=5)
     
     def inputharian_ke_main_window():
         inputWindow.destroy()
-        open_main_window(username)
+        parent_window.deiconify()
+        parent_window.state('zoomed')
     
     tk.Button(frame, text="Kembali", command=inputharian_ke_main_window).pack(pady=15)
     
     center_window(inputWindow, 640, 320)
 
-def input_steps_window():
+def input_steps_window(username):
     inputstepsWindow = tk.Toplevel()
     inputstepsWindow.title("Input Langkah")
 
@@ -261,11 +266,11 @@ def input_steps_window():
                 return
 
             # Pastikan "data_harian" ada dalam data user
-            if "data_harian" not in user_data[username]:
-                user_data[username]["data_harian"] = {}
+            if "data_harian_steps" not in user_data[username]:
+                user_data[username]["data_harian_steps"] = {}
 
             # Simpan data langkah untuk tanggal hari ini
-            user_data[username]["data_harian"][today] = steps
+            user_data[username]["data_harian_steps"][today] = steps
             save_database(user_data)
 
             tk.Label(frame, text="Data berhasil disimpan!", bg="pink", fg="green").grid(row=3, column=0, columnspan=2, pady=10)
@@ -280,7 +285,7 @@ def input_steps_window():
     center_window(inputstepsWindow, 640, 320)
     inputstepsWindow.mainloop()
 
-def input_sleep_window():
+def input_sleep_window(username):
     inputsleepWindow = tk.Toplevel()
     inputsleepWindow.title("Input Jam Tidur")
     
@@ -296,11 +301,18 @@ def input_sleep_window():
     def save_sleep():
         try:
             sleep = int(sleep_var.get())
+            today = str(date.today())  # Dapatkan tanggal hari ini dalam format string (YYYY-MM-DD)
+
             if username not in user_data:
-                user_data[username] = {"sleep": []}
-            
-            # Tambahkan langkah ke database
-            user_data[username]["sleep"].append(sleep)
+                msgbox.showerror("Error", f"Username '{username}' tidak ditemukan.")
+                return
+
+            # Pastikan "data_harian" ada dalam data user
+            if "data_harian_sleep" not in user_data[username]:
+                user_data[username]["data_harian_sleep"] = {}
+
+            # Simpan data langkah untuk tanggal hari ini
+            user_data[username]["data_harian_sleep"][today] = sleep
             save_database(user_data)
 
             tk.Label(frame, text="Data berhasil disimpan!", bg="pink", fg="green").grid(row=3, column=0, columnspan=2, pady=10)
@@ -315,7 +327,7 @@ def input_sleep_window():
     center_window(inputsleepWindow, 640, 320)
     inputsleepWindow.mainloop()
     
-def input_water_window():
+def input_water_window(username):
     inputwaterWindow = tk.Toplevel()
     inputwaterWindow.title("Input Gelas Air")
     
@@ -331,11 +343,18 @@ def input_water_window():
     def save_water():
         try:
             water = int(water_var.get())
+            today = str(date.today())  # Dapatkan tanggal hari ini dalam format string (YYYY-MM-DD)
+
             if username not in user_data:
-                user_data[username] = {"water": []}
-            
-            # Tambahkan langkah ke database
-            user_data[username]["water"].append(water)
+                msgbox.showerror("Error", f"Username '{username}' tidak ditemukan.")
+                return
+
+            # Pastikan "data_harian" ada dalam data user
+            if "data_harian_water" not in user_data[username]:
+                user_data[username]["data_harian_water"] = {}
+
+            # Simpan data langkah untuk tanggal hari ini
+            user_data[username]["data_harian_water"][today] = water
             save_database(user_data)
 
             tk.Label(frame, text="Data berhasil disimpan!", bg="pink", fg="green").grid(row=3, column=0, columnspan=2, pady=10)
@@ -374,13 +393,12 @@ def lihat_progress_window(username):
     
     tk.Label(frame, text="Selamat Datang!", font=("Arial", 16), bg="lightblue").pack(pady=10)
     tk.Label(frame, text="Pilih Progress", font=("Arial", 12), bg="lightblue").pack(pady=5)
-    tk.Button(frame, text="Harian", command=progressWindow.destroy).pack(padx=5)
-    tk.Button(frame, text=f"{user_data[username]['target']}", command=progressWindow.destroy).pack(padx=5)
     
     def grafik_window():
         show_graph_window()
     
-    tk.Button(frame, text="Grafik", command=grafik_window).pack(padx=5)
+    tk.Button(frame, text="Harian", command=grafik_window).pack(padx=5)
+    tk.Button(frame, text=f"{user_data[username]['target']}", command=grafik_window).pack(padx=5)
     
     def progress_ke_main_window():
         progressWindow.destroy()  # Tutup jendela progress

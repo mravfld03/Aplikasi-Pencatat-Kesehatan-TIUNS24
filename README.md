@@ -10,6 +10,9 @@ Tema: Aplikasi Pencatat Kesehatan Harian
 Deskripsi Umum:
 Aplikasi ini bertujuan membantu pengguna melacak dan memantau aktivitas kesehatan harian, seperti jumlah langkah, durasi tidur, dan jumlah air yang dikonsumsi. Dengan aplikasi ini, pengguna bisa mencatat setiap aktivitas kesehatan setiap hari, melihat progres mingguan atau bulanan, dan mendapatkan peringatan jika target kesehatan harian tidak terpenuhi.
 
+Tambahan informasi Libary:
+Sebelum me run hasil dari coding AIO tersebut atau hasil dari codingan final. Pastikan untuk meninstall pillow dan matpotlib terlebih dahulu dengan cara mengetik "pip install pillow" lalu "pip install matpolib" di VSC bagian terminal.
+
 Flowchart:
 
 ![Flowchart](images/flowchart.jpg)
@@ -87,3 +90,5 @@ Pengguna dapat menyesuaikan targetnya kapan saja berdasarkan progres dan kebutuh
 Teknologi dan Antarmuka
 Antarmuka Desktop:
 Dibuat dengan GUI untuk tampilan yang lebih menarik.
+
+

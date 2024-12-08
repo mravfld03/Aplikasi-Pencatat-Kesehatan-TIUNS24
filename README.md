@@ -7,11 +7,32 @@ Aplikasi Pencatat Kesehatan Harian
 
 Tema: Aplikasi Pencatat Kesehatan Harian
 
-Deskripsi Umum:
+Deskripsi Umum: 
 Aplikasi ini bertujuan membantu pengguna melacak dan memantau aktivitas kesehatan harian, seperti jumlah langkah, durasi tidur, dan jumlah air yang dikonsumsi. Dengan aplikasi ini, pengguna bisa mencatat setiap aktivitas kesehatan setiap hari, melihat progres mingguan atau bulanan, dan mendapatkan peringatan jika target kesehatan harian tidak terpenuhi.
 
-Tambahan informasi Libary:
-Sebelum me run hasil dari coding AIO tersebut atau hasil dari codingan final. Pastikan untuk meninstall pillow dan matpotlib terlebih dahulu dengan cara mengetik "pip install pillow" lalu "pip install matpolib" di VSC bagian terminal.
+Tambahan informasi Library:
+Tkinter
+Deskripsi: Tkinter adalah library bawaan Python untuk membuat antarmuka pengguna grafis (GUI).
+Kegunaan:
+Membuat aplikasi desktop dengan tombol, label, kotak teks, menu, dan elemen GUI lainnya.
+Cocok untuk aplikasi ringan dan cepat dalam pengembangan GUI.
+2. Matplotlib
+Deskripsi: Library untuk membuat visualisasi data dalam bentuk grafik dan plot.
+Kegunaan:
+Membuat grafik garis, batang, lingkaran, histogram, dan banyak lagi.
+Digunakan dalam analisis data dan presentasi hasil.
+3. Date (modul datetime)
+Deskripsi: Modul bawaan Python untuk menangani manipulasi tanggal dan waktu.
+Kegunaan:
+Mendapatkan tanggal/waktu saat ini.
+Menghitung selisih waktu (durasi) atau format ulang tanggal.
+Cocok untuk aplikasi yang memerlukan penjadwalan atau log waktu.
+4. Pillow
+Deskripsi: Library Python untuk memanipulasi dan memproses gambar. Merupakan pengembangan dari library Python Imaging Library (PIL).
+Kegunaan:
+Mengubah ukuran, memotong, memutar, atau menambahkan efek pada gambar.
+Mendukung berbagai format gambar seperti PNG, JPEG, dan lainnya.
+Cocok untuk aplikasi pengolahan gambar.
 
 Flowchart:
 

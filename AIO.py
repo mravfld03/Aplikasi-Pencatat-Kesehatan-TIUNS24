@@ -5,7 +5,7 @@ import json
 import os
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 # Nama file database
 database_file = "user_database.json"
@@ -24,6 +24,39 @@ def save_database(data):
 
 # Database pengguna
 user_data = load_database()
+
+def clean_old_data(username):
+    if username not in user_data:
+        return
+
+    # Tentukan batas waktu berdasarkan target pengguna
+    target = user_data[username].get("target", "Mingguan")
+    days_limit = 7 if target == "Mingguan" else 30  # 7 hari untuk mingguan, 30 hari untuk bulanan
+
+    # Tanggal saat ini
+    today = date.today()
+
+    # Bersihkan data lama untuk setiap kategori data harian
+    for category in ["data_harian_steps", "data_harian_sleep", "data_harian_water"]:
+        if category in user_data[username]:
+            keys_to_delete = []
+            for data_date in list(user_data[username][category].keys()):
+                try:
+                    # Konversi string tanggal ke objek date
+                    data_date_obj = datetime.strptime(data_date, "%Y-%m-%d").date()
+                    
+                    # Periksa jika data lebih lama dari batas waktu
+                    if (today - data_date_obj).days > days_limit:
+                        keys_to_delete.append(data_date)
+                except ValueError:
+                    continue  # Lewati data yang tidak sesuai format tanggal
+
+            # Hapus data lama dari database
+            for key in keys_to_delete:
+                del user_data[username][category][key]
+
+    # Simpan database yang diperbarui
+    save_database(user_data)
 
 # Fungsi untuk menyesuaikan ukuran dan posisi tengah jendela
 def center_window(window, width=1280, height=720):
@@ -63,6 +96,9 @@ def login_window():
         uname = username.get()
         pwd = password.get()
         if uname in user_data and user_data[uname]["password"] == pwd:
+            # Bersihkan data lama
+            clean_old_data(uname)
+            
             msgbox.showinfo("Login Berhasil", "Selamat datang, " + uname)
             loginWindow.destroy()
             open_main_window(uname)
@@ -275,6 +311,9 @@ def input_steps_window(username):
         try:
             steps = int(steps_var.get())
 
+            # Bersihkan data lama
+            clean_old_data(username)
+            
             if username not in user_data:
                 msgbox.showerror("Error", f"Username '{username}' tidak ditemukan.")
                 return
@@ -334,6 +373,9 @@ def input_sleep_window(username):
     def save_sleep():
         try:
             sleep = int(sleep_var.get())
+
+            # Bersihkan data lama
+            clean_old_data(username)
 
             if username not in user_data:
                 msgbox.showerror("Error", f"Username '{username}' tidak ditemukan.")
@@ -395,6 +437,9 @@ def input_water_window(username):
         try:
             water = int(water_var.get())
 
+            # Bersihkan data lama
+            clean_old_data(username)
+
             if username not in user_data:
                 msgbox.showerror("Error", f"Username '{username}' tidak ditemukan.")
                 return
@@ -424,6 +469,8 @@ def input_water_window(username):
     waterWindow.mainloop()
     
 def lihat_progress_window(username):
+    # Bersihkan data lama
+    clean_old_data(username)
     progressWindow = tk.Tk()
     progressWindow.title("Lihat Progress")
     

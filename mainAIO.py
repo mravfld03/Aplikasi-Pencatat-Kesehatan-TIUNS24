@@ -362,6 +362,14 @@ def input_steps_window(username):
             
             last_steps_label.config(text=f"Data terakhir: {steps} langkah pada {now}")
 
+            target_steps = int(user_data[username].get("langkah", 0))  # Ambil target langkah dari database
+            if steps < target_steps:
+                warning_text = f"Peringatan: Anda belum mencapai target harian {target_steps} langkah!"
+                tk.Label(frame, text=warning_text, bg="pink", fg="red", wraplength=300).grid(row=5, column=0, columnspan=2, pady=10)
+            else:
+                success_text = "Selamat! Anda telah mencapai target harian."
+                tk.Label(frame, text=success_text, bg="pink", fg="green", wraplength=300).grid(row=5, column=0, columnspan=2, pady=10)
+            
             tk.Label(frame, text="Data berhasil disimpan!", bg="pink", fg="green").grid(row=3, column=0, columnspan=2, pady=10)
             steps_var.set("")  # Bersihkan input
         except ValueError:
@@ -425,6 +433,14 @@ def input_sleep_window(username):
             
             last_sleep_label.config(text=f"Data terakhir: {sleep} jam tidur pada {now}")
 
+            target_sleep = int(user_data[username].get("jamTidur", 0))  # Ambil target langkah dari database
+            if sleep < target_sleep:
+                warning_text = f"Peringatan: Anda belum mencapai target harian {target_sleep} jam tidur!"
+                tk.Label(frame, text=warning_text, bg="pink", fg="red", wraplength=300).grid(row=5, column=0, columnspan=2, pady=10)
+            else:
+                success_text = "Selamat! Anda telah mencapai target harian."
+                tk.Label(frame, text=success_text, bg="pink", fg="green", wraplength=300).grid(row=5, column=0, columnspan=2, pady=10)
+            
             tk.Label(frame, text="Data berhasil disimpan!", bg="pink", fg="green").grid(row=3, column=0, columnspan=2, pady=10)
             sleep_var.set("")  # Bersihkan input
         except ValueError:
@@ -487,6 +503,14 @@ def input_water_window(username):
             save_database(user_data)
 
             last_water_label.config(text=f"Data terakhir: {water} gelas air pada {now}")
+            
+            target_water = int(user_data[username].get("gelasair", 0))  # Ambil target langkah dari database
+            if water < target_water:
+                warning_text = f"Peringatan: Anda belum mencapai target harian {target_water} gelas air!"
+                tk.Label(frame, text=warning_text, bg="pink", fg="red", wraplength=300).grid(row=5, column=0, columnspan=2, pady=10)
+            else:
+                success_text = "Selamat! Anda telah mencapai target harian."
+                tk.Label(frame, text=success_text, bg="pink", fg="green", wraplength=300).grid(row=5, column=0, columnspan=2, pady=10)
             
             tk.Label(frame, text="Data berhasil disimpan!", bg="pink", fg="green").grid(row=3, column=0, columnspan=2, pady=10)
             water_var.set("")  # Bersihkan input
@@ -566,6 +590,9 @@ def show_graph2_window():
     username_entry = tk.Entry(graph2Window)
     username_entry.pack(pady=10)
     
+    warning_label = tk.Label(graph2Window, text="", font=("Arial", 10), fg="red", bg="pink")
+    warning_label.pack(pady=5)
+    
     def read_data(file_path):
         try:
             with open(file_path, 'r') as file:
@@ -594,20 +621,41 @@ def show_graph2_window():
             print(f"Data untuk hari ini ({today_date}) tidak lengkap untuk pengguna '{username}'.")
             return
 
+        try:
+            target_steps = int(user_data.get("langkah", 0))
+            target_sleep = int(user_data.get("jamTidur", 0))
+            target_water = int(user_data.get("gelasair", 0))
+        except ValueError:
+            print("Format target tidak valid.")
+            return
         # Plot data
-        labels = ['Steps', 'Sleep (hours)', 'Water (liters)']
+        labels = ['Steps', 'Sleep (hours)', 'Water (per250ml)']
         values = [steps, sleep, water]
-        y_limits = [10000, 8, 8]
+        targets = [target_steps, target_sleep, target_water]
+        y_limits = [max(target_steps + 2000, 10000), 10, 10]
 
-        fig, axs = plt.subplots(1, 3, figsize=(8, 12))
+        fig, axs = plt.subplots(1, 3, figsize=(18, 6))
         colors = ['blue', 'green', 'purple']
 
+        unmet_targets = []
         for i, ax in enumerate(axs):
             ax.bar(labels[i], values[i], color=colors[i])
+            ax.axhline(targets[i], color='red', linestyle='--', linewidth=2, label=f'Target: {targets[i]}')
             ax.set_title(f"{labels[i]} Progress ({today_date})")
             ax.set_ylim(0, y_limits[i])  # Batas sumbu y khusus untuk setiap grafik
             ax.set_ylabel("Jumlah")
             ax.grid(axis='y', linestyle='--', alpha=0.7)
+            ax.legend()
+            
+            if values[i] < targets[i]:
+                unmet_targets.append(labels[i])
+
+        # Periksa apakah ada target yang belum tercapai
+        if unmet_targets:
+            warning_label.config(text=f"Belum memenuhi target harian: {', '.join(unmet_targets)}")
+        else:
+            warning_label.config(text="Semua target hari ini sudah tercapai! 🎉")
+            
         plt.tight_layout()
         plt.show()
         
@@ -688,33 +736,47 @@ def show_graph_window():
             print(f"Kesalahan dalam format tanggal: {e}")
             return
 
+        try:
+            target_steps = int(user_data.get("langkah", 0))
+            target_sleep = int(user_data.get("jamTidur", 0))
+            target_water = int(user_data.get("gelasair", 0))
+        except ValueError:
+            print("Format target tidak valid.")
+            return
+        
         # Plot data
         plt.figure(figsize=(12, 8))
 
         # Grafik langkah
         plt.subplot(3, 1, 1)
         plt.plot(steps_data.keys(), steps_data.values(), marker='o', label='Steps', color='blue')
+        plt.axhline(y=target_steps, color='red', linestyle='--', label=f'Target: {target_steps}')
         plt.title('Daily Steps')
         plt.xlabel('Date')
         plt.ylabel('Steps')
+        plt.ylim(0, max(target_steps + 2000, max(steps_data.values(), default=0) + 2000))
         plt.xticks(rotation=45)
         plt.legend()
 
         # Grafik tidur
         plt.subplot(3, 1, 2)
         plt.plot(sleep_data.keys(), sleep_data.values(), marker='o', label='Sleep (hours)', color='green')
+        plt.axhline(y=target_sleep, color='red', linestyle='--', label=f'Target: {target_sleep}')
         plt.title('Daily Sleep')
         plt.xlabel('Date')
         plt.ylabel('Hours')
+        plt.ylim(0, 10)
         plt.xticks(rotation=45)
         plt.legend()
 
         # Grafik air
         plt.subplot(3, 1, 3)
-        plt.plot(water_data.keys(), water_data.values(), marker='o', label='Water (liters)', color='purple')
+        plt.plot(water_data.keys(), water_data.values(), marker='o', label='Water (per250ml)', color='purple')
+        plt.axhline(y=target_water, color='red', linestyle='--', label=f'Target: {target_water}')
         plt.title('Daily Water Intake')
         plt.xlabel('Date')
-        plt.ylabel('Liters')
+        plt.ylabel('per250ml')
+        plt.ylim(0, 10)
         plt.xticks(rotation=45)
         plt.legend()
 

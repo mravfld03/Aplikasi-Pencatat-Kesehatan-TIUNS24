@@ -90,6 +90,17 @@ def login_window():
     password = tk.Entry(frame, show="*")
     username.grid(row=0, column=1, padx=5, pady=5)
     password.grid(row=1, column=1, padx=5, pady=5)
+    
+    def toggle_password():
+        if password.cget('show') == '*':
+            password.config(show='')
+            toggle_button.config(text='👁️')  # Ganti simbol mata
+        else:
+            password.config(show='*')
+            toggle_button.config(text='👁️')  # Ganti simbol mata
+            
+    toggle_button = tk.Button(frame, text="👁️", command=toggle_password, bg="white")
+    toggle_button.grid(row=1, column=2, padx=5, pady=5)
 
     def login_action():
         uname = username.get()
@@ -157,6 +168,28 @@ def register_window():
 
     target_menu = tk.OptionMenu(frame, target_variable, *options)
     target_menu.grid(row=2, column=1, padx=5, pady=5)
+    
+    def toggle_password():
+        if password.cget('show') == '*':
+            password.config(show='')
+            toggle_button.config(text='👁️')  # Ganti simbol mata
+        else:
+            password.config(show='*')
+            toggle_button.config(text='👁️')  # Ganti simbol mata
+            
+    toggle_button = tk.Button(frame, text="👁️", command=toggle_password, bg="white")
+    toggle_button.grid(row=1, column=2, padx=5, pady=5)
+    
+    def validate_number(entry, field_name):
+        value = entry.get()
+        if not value.isdigit():
+            msgbox.showerror("Input Tidak Valid", f"{field_name} harus berupa angka.")
+            entry.delete(0, tk.END)  # Hapus input yang tidak valid
+
+    # Tambahkan validasi input angka
+    langkah.bind("<FocusOut>", lambda e: validate_number(langkah, "Langkah"))
+    jamTidur.bind("<FocusOut>", lambda e: validate_number(jamTidur, "Jam Tidur"))
+    gelasair.bind("<FocusOut>", lambda e: validate_number(gelasair, "Gelas Air"))
 
     def register_action():
         uname = username.get()
@@ -564,12 +597,17 @@ def show_graph2_window():
         # Plot data
         labels = ['Steps', 'Sleep (hours)', 'Water (liters)']
         values = [steps, sleep, water]
+        y_limits = [10000, 8, 8]
 
-        plt.figure(figsize=(8, 6))
-        plt.bar(labels, values, color=['blue', 'green', 'purple'])
-        plt.title(f"Progress Harian ({today_date})")
-        plt.ylabel("Jumlah")
-        plt.xticks(rotation=0)
+        fig, axs = plt.subplots(1, 3, figsize=(8, 12))
+        colors = ['blue', 'green', 'purple']
+
+        for i, ax in enumerate(axs):
+            ax.bar(labels[i], values[i], color=colors[i])
+            ax.set_title(f"{labels[i]} Progress ({today_date})")
+            ax.set_ylim(0, y_limits[i])  # Batas sumbu y khusus untuk setiap grafik
+            ax.set_ylabel("Jumlah")
+            ax.grid(axis='y', linestyle='--', alpha=0.7)
         plt.tight_layout()
         plt.show()
         
